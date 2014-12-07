@@ -17,9 +17,12 @@
         <button ng-click="mostrarApps()" class="btn btn-warning">
             <span class="glyphicon glyphicon-search"></span> Buscar</button>
         <li ng-repeat="app in apps">
-            {{app}}<button ng-click="mandarLentitud(app)" class="btn btn-danger">
+            <h4>{{app}}</h4><input class="form-control" height="300">
+            <button ng-click="mandarLentitud(app)" class="btn btn-danger">
             <span class="glyphicon glyphicon-search"></span> Mandar</button>
         </li>
+        <p></p>
+        <h3>{{reportes}}</h3>
 
 
 
@@ -47,10 +50,11 @@
 
 
         $scope.mandarLentitud= function(val){
-            var uri= $scope.URI+"addlentitud/"+val;
-            $http.get(uri).success(
-                    function(data){
+            var uriaux=$scope.URI+"addapplive/"+val;
 
+            $http.get(uriaux).success(
+                    function(data){
+                        $scope.apps="";
                         $scope.reportes="Su reporte de lentitud fue enviado.";
                     }
             );
