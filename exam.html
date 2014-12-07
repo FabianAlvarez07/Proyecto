@@ -10,33 +10,86 @@
 <body ng-app>
 <div style="width:53%"  ng-controller="controlador" >
 
+
+
+    <div >
+        <h2 class="text-warning text-center">Centro de monitoreo </h2>
+    </div>
+
     <div class="container">
         <h4>Mostrar apps en vivo:</h4>
 
-            <button ng-click="mostrarApps()" class="btn btn-info">
-                    <span class="glyphicon glyphicon-search"></span> Buscar</button>
-            <li ng-repeat="app in apps">
-                <h5>{{app}}</h5><button ng-click="mostrarReporteApp(app)" class="btn btn-info">
-                        <span class="glyphicon glyphicon-search"></span> Seleccionar</button>
-            </li>
+        <button ng-click="mostrarApps()" class="btn btn-info">
+            <span class="glyphicon glyphicon-search"></span> Buscar</button>
+        <li ng-repeat="app in apps">
+            <h5>{{app}}</h5><button ng-click="mostrarReporteApp(app)" class="btn btn-info">
+            <span class="glyphicon glyphicon-search"></span> Seleccionar</button>
+        </li>
         {{alertas}}
 
     </div>
 
-    <div >
-        <div style="background-color:lavender;">
 
+    <div class="container">
+        <div class="row">
+            <div>
+                <h2 class="text-info ">   {{val}}</h2>
+            </div>
+            <div class="col-sm-3 col-md-7">
+                <div class="well">
+                    <h2 class="text-muted">Paquetes</h2>
+                    <p><span class="label label-default">CPU vs Tiempo</span></p>
+                    <div  style="background-color:lavender;">
+                        <canvas id="canvasCpu" height="350" width="600"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3 col-md-3">
+                <div class="well">
+                    <h2 class="text-warning">Alertas</h2>
 
-            <canvas id="canvasCpu" height="400" width="1000"></canvas>
-        </div>
+                    <p><span class="label label-success"> ------------------------------</span></p>
 
-        <div style="background-color:lavenderblush;">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta.</p>
+                    <hr>
 
-            <canvas id="canvasMemory" height="400" width="1000"></canvas>
+                    <hr>
+                    <p><a class="btn btn-success btn-lg"><i class="icon-ok"></i> Limpiar</a></p>
+                </div>
+            </div>
+
         </div>
     </div>
 
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3 col-md-7">
+                <div class="well">
+                    <h2 class="text-muted">Paquetes</h2>
+                    <p><span class="label label-default">Memoria vs Tiempo</span></p>
 
+                    <div style="background-color:lavenderblush;">
+
+                        <canvas id="canvasMemory" height="400" width="1000"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3 col-md-3">
+                <div class="well">
+                    <h2 class="text-warning">Alertas</h2>
+
+                    <p><span class="label label-success"> ------------------------------</span></p>
+
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nisi. Nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta.</p>
+                    <hr>
+
+                    <hr>
+                    <p><a class="btn btn-success btn-lg"><i class="icon-ok"></i> Limpiar</a></p>
+                </div>
+            </div>
+
+        </div>
+    </div>
 
 
 </div>
