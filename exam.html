@@ -1,0 +1,202 @@
+<!doctype html>
+<html>
+<head>
+    <title>Monitor</title>
+    <script src="Chart.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+</head>
+<body ng-app>
+<div style="width:30%"  ng-controller="controlador" >
+
+    <div class="container">
+        <h4>Mostrar apps en vivo:</h4>
+
+            <button ng-click="mostrarApps()" class="btn btn-info">
+                    <span class="glyphicon glyphicon-search"></span> Buscar</button>
+            <li ng-repeat="app in apps">
+                <h5>{{app}}</h5><button ng-click="mostrarReporteApp(app)" class="btn btn-info">
+                        <span class="glyphicon glyphicon-search"></span> Seleccionar</button>
+            </li>
+
+
+    </div>
+
+    <div class="container">
+        <div class="col-sm-6" style="background-color:lavender;">
+
+
+            <canvas id="canvasCpu" height="350" width="600"></canvas>
+        </div>
+
+        <div class="col-sm-6" style="background-color:lavenderblush;">
+
+            <canvas id="canvasMemory" height="350" width="600"></canvas>
+        </div>
+    </div>
+
+
+
+
+</div>
+</body>
+
+<script>
+    function controlador($scope,$http){
+
+        $scope.URI="http://rest-test-heroku.herokuapp.com/services/reporte/";
+        $scope.reportes=[-1];
+        $scope.reportes;
+        $scope.apps;
+
+
+        $scope.yCpu;
+
+        $scope.yMemory;
+        $scope.val;
+
+        var interval_id;
+
+        $scope.graficarInfinito = function() {
+            interval_id = setInterval($scope.graficarbanda, 1000);
+        };
+        $scope.graficarbanda = function(){
+            var uri= $scope.URI+$scope.val+"/paquete";
+
+            $http.get(uri).success(
+                    function(data){
+                        if(data!=null){
+                            if($scope.reportes!=data.id){
+
+                                $scope.reportes=data;
+                                if(data.length>0) {
+
+
+                                    $scope.dibujarCpu(data.datos[1]);
+                                    $scope.dibujarMemory(data.datos[2]);
+                                }
+                            }
+                        }
+                    }
+            );
+        }
+
+
+        $scope.mostrarApps = function(){
+            var uri= $scope.URI+"getappsnames/";
+
+            $http.get(uri).success(
+                    function(data){
+                      $scope.apps=data;
+                    }
+            );
+
+        }
+
+        $scope.mostrarReporteApp= function(val){
+
+            var uriaux=$scope.URI+"addapplive/"+val;
+            $scope.val=val;
+
+           $http.get(uriaux).success(
+                    function(data){
+                        $scope.apps=[];
+                        $scope.graficarInfinito();
+                    }
+            );
+        };
+
+        $scope.dibujarCpu = function(val){
+
+            if(chartCpu.datasets[0].data.length===7){
+                    chartCpu.datasets[0].data.shift();
+            }
+
+            var ctx = document.getElementById("canvasCpu").getContext("2d");
+
+            chartCpu.datasets[0].data.push(val);
+
+            window.myLine = new Chart(ctx).Line(chartCpu, {
+                responsive: true
+            });
+
+
+        }
+        $scope.dibujarMemory = function(val){
+
+            if(chartMemory.datasets[0].data.length===7){
+
+                chartMemory.datasets[0].data.shift();
+
+            }
+
+
+            var ctx = document.getElementById("canvasMemory").getContext("2d");
+
+            chartMemory.datasets[0].data.push(val);
+
+            window.myLine = new Chart(ctx).Line(chartMemory, {
+                responsive: true
+            });
+
+
+
+
+        }
+
+
+        var randomScalingFactor = function(){ return Math.round(Math.random()*100)};
+        var chartCpu = {
+            labels : ["0","1","2","3","4","5","6"],
+            datasets : [
+
+                {
+                    label: "Cpu VS time",
+                    fillColor : "rgba(151,187,205,0.2)",
+                    strokeColor : "rgba(151,187,205,1)",
+                    pointColor : "rgba(151,187,205,1)",
+                    pointStrokeColor : "#fff",
+                    pointHighlightFill : "#fff",
+                    pointHighlightStroke : "rgba(151,187,205,1)",
+                    data : []
+                }
+
+            ]
+        }
+        var chartMemory = {
+            labels : ["0","1","2","3","4","5","6"],
+            datasets : [
+
+                {
+                    label: "Memory VS time",
+                    fillColor : "rgba(151,187,205,0.2)",
+                    strokeColor : "rgba(151,187,205,1)",
+                    pointColor : "rgba(151,187,205,1)",
+                    pointStrokeColor : "#fff",
+                    pointHighlightFill : "#fff",
+                    pointHighlightStroke : "rgba(151,187,205,1)",
+                    data : []
+                }
+
+            ]
+        }
+        window.onload = function(){
+            var ctx = document.getElementById("canvasCpu").getContext("2d");
+            window.myLine = new Chart(ctx).Line(chartCpu, {
+                responsive: true
+            });
+            var ctx = document.getElementById("canvasMemory").getContext("2d");
+            window.myLine = new Chart(ctx).Line(chartMemory, {
+                responsive: true
+            });
+        }
+
+    }
+
+
+
+</script>
+
+
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+
+    <meta charset="UTF-8">
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+</head>
+
+
+
+<body ng-app>
+<div ng-controller="controlador" >
+
+    <div class="container">
+        <h3>Mostrar apps en vivo</h3>
+        <button ng-click="mostrarApps()" class="btn btn-warning">
+            <span class="glyphicon glyphicon-search"></span> Buscar</button>
+        <li ng-repeat="app in apps">
+            {{app}}<button ng-click="mandarLentitud(app)" class="btn btn-danger">
+            <span class="glyphicon glyphicon-search"></span> Mandar</button>
+        </li>
+
+
+
+    </div>
+</div>
+</body>
+
+<script>
+    function controlador($scope,$http){
+        $scope.URI="http://rest-test-heroku.herokuapp.com/services/reporte/";
+
+        $scope.reportes="";
+        $scope.apps;
+        $scope.mostrarApps = function(){
+            var uri= $scope.URI+"getappsnames/";
+
+            $http.get(uri).success(
+                    function(data){
+
+                        $scope.apps=data;
+                    }
+            );
+
+        }
+
+
+        $scope.mandarLentitud= function(val){
+            var uri= $scope.URI+"addlentitud/"+val;
+            $http.get(uri).success(
+                    function(data){
+
+                        $scope.reportes="Su reporte de lentitud fue enviado.";
+                    }
+            );
+
+        }
+    }
+</script>
+</html>

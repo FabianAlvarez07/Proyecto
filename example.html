@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+</head>
+
+
+
+<body ng-app>
+<div ng-controller="controlador" >
+
+    <div style={{estado1}}>
+        Ingrese la placa del automovil y oprima seguir
+        <input type="text" ng-model="placa">
+        <button ng-click="graficartodo()">Seguir</button>
+    </div>
+
+    <div style={{estado2}}>
+
+        Mostrando el desplazamiento del automovil de placas {{placa}}.
+        Oprima Detener para finalizar
+        <button ng-click="detener()">Detener</button>
+    </div>
+</div>
+
+
+
+<canvas id="canvas" height="500" width="500">
+
+</canvas>
+
+</body>
+
+<script>
+    function controlador($scope,$http){
+        $scope.posx=0;
+        $scope.posy=0;
+        $scope.placa;
+        $scope.estado1="visibility:visible";
+        $scope.estado2="visibility:hidden";
+        var interval_id;
+
+        $scope.graficartodo = function() {
+            interval_id = setInterval($scope.graficar, 100)
+        }
+
+
+        $scope.graficar = function(){
+            var uri= 'http://cartrackingapi.herokuapp.com/rest/autos/'+ $scope.placa;
+            $http.get(uri).success(
+                    function(data){
+                        $scope.placa=data.placa;
+                        $scope.posx=data.coordenadas.lat;
+                        $scope.posy=data.coordenadas.long;
+                        var cnv = document.getElementById("canvas");
+                        var ctx = cnv.getContext("2d");
+                        var img = new Image();
+                        img.onload = function(){
+                            ctx.drawImage(img,$scope.posx,$scope.posy,50,50);
+                        }
+                        img.src = "img/car.png";
+                    }
+            );
+            $scope.estado1="visibility:hidden";
+            $scope.estado2="visibility:visible";
+        }
+
+        $scope.detener = function (hidden) {
+            clearInterval(interval_id);
+            $scope.estado1="visibility:visible";
+            $scope.estado2="visibility:hidden";
+        }
+
+
+    }
+</script>
+
+</html>
