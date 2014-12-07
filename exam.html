@@ -19,7 +19,7 @@
                 <h5>{{app}}</h5><button ng-click="mostrarReporteApp(app)" class="btn btn-info">
                         <span class="glyphicon glyphicon-search"></span> Seleccionar</button>
             </li>
-
+        {{alertas}}
 
     </div>
 
@@ -49,6 +49,7 @@
         $scope.reportes=[-1];
         $scope.reportes;
         $scope.apps;
+        $scope.alertas;
 
 
         $scope.yCpu;
@@ -57,26 +58,26 @@
         $scope.val;
 
         var interval_id;
+        var interval_id1;
 
         $scope.graficarInfinito = function() {
             interval_id = setInterval($scope.graficarbanda, 1000);
+            interval_id1 = setInterval($scope.mostrarAlertas, 1000);
         };
         $scope.graficarbanda = function(){
             var uri= $scope.URI+$scope.val+"/paquete";
 
             $http.get(uri).success(
                     function(data){
-                        if(data!=null){
-                            if($scope.reportes!=data.id){
+                        if(data!="null" && data!=null){
+
 
                                 $scope.reportes=data;
-                                if(data.length>0) {
-
 
                                     $scope.dibujarCpu(data.datos[1]);
                                     $scope.dibujarMemory(data.datos[2]);
-                                }
-                            }
+
+
                         }
                     }
             );
@@ -103,9 +104,24 @@
                     function(data){
                         $scope.apps=[];
                         $scope.graficarInfinito();
+
                     }
             );
         };
+        $scope.mostrarAlertas=function(){
+            var uri=$scope.URI+$scope.val+"/alerta";
+            $http.get(uri).success(
+                    function(data){
+                        if(data!=null) {
+                            $scope.alertas = data.mensaje;
+
+
+
+                        }
+                    }
+            );
+
+        }
 
         $scope.dibujarCpu = function(val){
 
